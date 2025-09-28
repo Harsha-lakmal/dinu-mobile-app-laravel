@@ -6,4 +6,5 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-require __DIR__.'/main/main.php';
+require __DIR__ . '/main/main.php';
+require __DIR__ . '/auth/auth.php';

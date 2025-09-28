@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
-    function home () {
+    function dashboard () {
         return view('dashborad');
      }
 
@@ -29,4 +29,5 @@ class MainController extends Controller
      function settings() {
             return view('page.settings');
      }
+
 }
