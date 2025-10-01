@@ -223,13 +223,14 @@
                         timer: 1500,
                         showConfirmButton: false,
                         willClose: () => {
-                            // Redirect to dashboard
-                            // window.location.href = response.redirect || '/dashboard';
+                            window.location.href = response.redirect || '/dashboard';
                         }
                     });
                 },
                 error: function(xhr) {
                     // Reset button
+                    console.log(xhr);
+                    
                     button.innerHTML = originalText;
                     button.disabled = false;
 

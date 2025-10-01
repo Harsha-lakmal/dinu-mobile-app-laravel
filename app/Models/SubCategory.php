@@ -15,7 +15,7 @@ class SubCategory extends Model
         'sub_title',
         'desc',
         'subCategoriesNumber',
-        'category_id',
+        'categoires_id',
     ];
 
  

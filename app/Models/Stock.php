@@ -19,7 +19,7 @@ class Stock extends Model
         'count',
         'desc',
         'stockNumber',
-        'category_id',
+        'subCategory_id',
     ];
 
 }

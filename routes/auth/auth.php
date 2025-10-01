@@ -17,27 +17,28 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', function () {
-        return view('dashboard');
+    Route::get('/dashborad', function () {
+        return view('dashborad');
     })->name('dashboard');
     
     Route::get('/categories', function () {
-        return view('categories');
+        return view('page.categories');
     })->name('categories');
     
     Route::get('/stock', function () {
-        return view('stock');
+        return view('page.stock');
     })->name('stock');
     
     Route::get('/users', function () {
-        return view('users');
+        return view('page.user');
     })->name('users');
     
     Route::get('/settings', function () {
-        return view('settings');
+        return view('page.settings');
     })->name('settings');
     
     Route::get('/reports', function () {
-        return view('reports');
+        return view('page.report'
+);
     })->name('reports');
 });

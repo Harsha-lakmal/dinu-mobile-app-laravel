@@ -66,7 +66,7 @@
                     <div class="flex items-center space-x-4">
                     
                             @csrf
-                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                            <button onclick="logOut()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                                 Logout
                             </button>
                         </form>
@@ -99,6 +99,8 @@
             document.getElementById('sidebar').classList.add('-translate-x-full');
             this.classList.add('hidden');
         });
+
+
     </script>
 </body>
 </html>

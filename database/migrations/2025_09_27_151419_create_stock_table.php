@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->string('count');
             $table->string('desc');
             $table->string('stockNumber');
-            $table->integer('category_id') ; 
+            $table->integer('subCategory_id') ; 
             $table->timestamps();
              
         });

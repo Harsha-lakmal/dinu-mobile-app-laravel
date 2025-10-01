@@ -12,12 +12,11 @@ use Illuminate\Support\Facades\Validator;
 
 class AnuthController extends Controller
 {
-    
-  public function showLogin()
+
+    public function showLogin()
     {
         return view('auth.login');
     }
-
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -27,13 +26,20 @@ class AnuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Login successful!',
+                'redirect_url' => url('/dashboard') 
+            ]);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->withInput($request->except('password'));
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'The provided credentials do not match our records.',
+        ], 401);
     }
+
 
     public function showRegister()
     {
@@ -71,10 +77,17 @@ class AnuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/login');
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'You have been logged out successfully.',
+            'redirect_url' => url('/login')
+        ]);
     }
+
 
     public function showProfile()
     {
@@ -98,11 +111,11 @@ class AnuthController extends Controller
                 ->withInput();
         }
 
-      //   $user->update([
-      //       'name' => $request->name,
-      //       'email' => $request->email,
-      //       'TelNumber' => $request->TelNumber,
-      //   ]);
+        //   $user->update([
+        //       'name' => $request->name,
+        //       'email' => $request->email,
+        //       'TelNumber' => $request->TelNumber,
+        //   ]);
 
         return redirect()->back()->with('success', 'Profile updated successfully!');
     }
@@ -131,11 +144,10 @@ class AnuthController extends Controller
             return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
         }
 
-      //   $user->update([
-      //       'password' => Hash::make($request->new_password),
-      //   ]);
+        //   $user->update([
+        //       'password' => Hash::make($request->new_password),
+        //   ]);
 
         return redirect()->back()->with('success', 'Password changed successfully!');
     }
-   
 }

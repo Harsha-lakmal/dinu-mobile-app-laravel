@@ -14,7 +14,6 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('categoriesNumber')->unique();
-            $table->integer('sub_categoires_id');
             $table->string('decs');
             $table->timestamps();
         });
