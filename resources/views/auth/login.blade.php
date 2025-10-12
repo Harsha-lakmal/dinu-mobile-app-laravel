@@ -213,8 +213,8 @@
                     // Reset button
                     button.innerHTML = originalText;
                     button.disabled = false;
-                    console.log(response);
-                    
+                    getUserData(email);
+
 
                     Swal.fire({
                         icon: 'success',
@@ -230,7 +230,7 @@
                 error: function(xhr) {
                     // Reset button
                     console.log(xhr);
-                    
+
                     button.innerHTML = originalText;
                     button.disabled = false;
 
@@ -261,6 +261,39 @@
                 }
             });
         });
+
+        function getUserData(email) {
+            $.ajax({
+                url: "{{route('user.data')}}",
+                method: 'GET',
+                accepts: 'application/json',
+                data: {
+                    email: email
+                },
+                success: function(response) {
+                    console.log("data: ", response);
+
+                    localStorage.setItem('userData', JSON.stringify(response));
+                    console.log("User data saved in localStorage!");
+                },
+                error: function(xhr) {
+                    console.log(xhr);
+                    let errorMessage = 'Something went wrong. Please try again.';
+
+                    if (xhr.status === 422) {
+                        const errors = xhr.responseJSON.errors;
+                        if (errors.email) {
+                            errorMessage = errors.email[0];
+                        }
+                    } else if (xhr.status === 404) {
+                        errorMessage = 'User not found with this email.';
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                }
+            });
+        }
+
 
         // Real-time validation
         document.getElementById('email').addEventListener('blur', function() {
