@@ -26,8 +26,6 @@ class MainController extends Controller
      function users () {   
             return view('page.user');
      }
-     function settings() {
-            return view('page.settings');
-     }
+
 
 }

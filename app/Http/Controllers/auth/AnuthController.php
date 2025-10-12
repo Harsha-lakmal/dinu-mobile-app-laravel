@@ -24,13 +24,15 @@ class AnuthController extends Controller
             'password' => 'required',
         ]);
 
+
         if (Auth::attempt($credentials)) {
+
             $request->session()->regenerate();
 
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Login successful!',
-                'redirect_url' => url('/dashboard') 
+                'redirect_url' => url('/dashboard')
             ]);
         }
 
@@ -45,6 +47,31 @@ class AnuthController extends Controller
     {
         return view('auth.register');
     }
+
+
+    public function getUserData(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email', 
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $email = $validator->validated()['email'];
+
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            return response()->json($user);
+        }
+
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
 
     public function register(Request $request)
     {
