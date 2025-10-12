@@ -49,16 +49,12 @@
                     <i class="fas fa-file-alt mr-3"></i>
                     <span>Categories</span>
                 </a>
-                
-                <a href="{{ route('users') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page2') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
-                    <i class="fas fa-users mr-3"></i>
-                    <span>Users</span>
-                </a>
-                
-                <a href="{{ route('settings') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page3') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
-                    <i class="fas fa-cog mr-3"></i>
-                    <span>Settings</span>
-                </a>
+               <a href="{{ route('users') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page2') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
+                <i class="fas fa-user-circle mr-3"></i>
+                <span>Profile</span>
+            </a>
+
+              
             </nav>
         </div>
 
@@ -75,7 +71,8 @@
                     </div>
                     
                     <div class="flex items-center space-x-4">
-                        <span class="text-gray-700">John Doe</span>
+                       <span id="userName" class="text-gray-700">John Doe</span>
+
                         <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                             Logout
                         </button>

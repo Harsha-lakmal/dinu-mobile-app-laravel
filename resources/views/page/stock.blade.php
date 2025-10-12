@@ -1,43 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         .active-nav {
             background-color: #e0e7ff;
             color: #4f46e5;
             border-right: 2px solid #4f46e5;
         }
+
         .nav-item:hover {
             background-color: #f3f4f6;
         }
+
         .low-stock {
             color: #dc2626;
             font-weight: 600;
         }
+
         .medium-stock {
             color: #d97706;
             font-weight: 600;
         }
+
         .high-stock {
             color: #059669;
             font-weight: 600;
         }
+
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
+
 <body class="bg-gray-100">
     <div class="flex h-screen">
         <!-- Mobile sidebar overlay -->
@@ -51,32 +65,29 @@
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            
+
             <nav class="mt-6">
-               <a href="{{ route('stock') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page1') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
+                <a href="{{ route('stock') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page1') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
                     <i class="fas fa-chart-bar mr-3"></i>
                     <span>Stock</span>
                 </a>
-                 <a href="{{ route('reports') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page4') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
+                <a href="{{ route('reports') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page4') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
                     <i class="fas fa-file-alt mr-3"></i>
                     <span>Reports</span>
                 </a>
 
-                 <a href="{{ route('categories') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page4') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
+                <a href="{{ route('categories') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page4') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
                     <i class="fas fa-file-alt mr-3"></i>
                     <span>Categories</span>
                 </a>
-                
-                <a href="{{ route('users') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page2') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
-                    <i class="fas fa-users mr-3"></i>
-                    <span>Users</span>
-                </a>
-                
-                <a href="{{ route('settings') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page3') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
-                    <i class="fas fa-cog mr-3"></i>
-                    <span>Settings</span>
-                </a>
-            </nav> 
+
+                  <a href="{{ route('users') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page2') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
+                <i class="fas fa-user-circle mr-3"></i>
+                <span>Profile</span>
+            </a>
+
+
+            </nav>
         </div>
 
         <!-- Main content -->
@@ -90,9 +101,10 @@
                         </button>
                         <h2 class="text-lg font-semibold text-gray-800">Stock Management</h2>
                     </div>
-                    
+
                     <div class="flex items-center space-x-4">
-                        <span class="text-gray-700">John Doe</span>
+                        <span id="userName" class="text-gray-700">Dinu</span>
+
                         <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium" onclick="logOut()">
                             Logout
                         </button>
@@ -176,14 +188,14 @@
                     <div class="bg-white rounded-lg shadow p-6 mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="relative">
-                                <input type="text" id="searchInput" placeholder="Search products..." 
+                                <input type="text" id="searchInput" placeholder="Search products..."
                                     class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                     onkeyup="filterStock()">
                                 <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                             </div>
                             <select id="categoryFilter" onchange="filterStock()"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
-                                <option value="">All Categories</option>
+                                <option value="">All Subcategories</option>
                             </select>
                             <select id="stockStatusFilter" onchange="filterStock()"
                                 class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
@@ -215,7 +227,7 @@
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Brand/Model</th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subcategory</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Stock</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -261,7 +273,7 @@
                 <!-- Form -->
                 <form id="stockForm" class="p-6 space-y-5">
                     <input type="hidden" id="stock_id" name="id">
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Name -->
                         <div class="space-y-2">
@@ -317,26 +329,19 @@
                                 placeholder="0">
                         </div>
 
-                        <!-- Stock Number -->
-                        <div class="space-y-2">
-                            <label class="block text-sm font-semibold text-gray-700" for="stockNumber">
-                                Stock Number *
-                            </label>
-                            <input type="text" id="stockNumber" name="stockNumber" required
-                                class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-gray-50 focus:bg-white"
-                                placeholder="Enter stock number">
-                        </div>
+
+
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Subcategory -->
                         <div class="space-y-2">
                             <label class="block text-sm font-semibold text-gray-700" for="subCategory_id">
-                             Sub   Category *
+                                Sub Category *
                             </label>
                             <select id="subCategory_id" name="subCategory_id" required
                                 class="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 bg-gray-50 focus:bg-white">
-                                <option value="">Select Category</option>
+                                <option value="">Select Subcategory</option>
                             </select>
                         </div>
                     </div>
@@ -408,7 +413,6 @@
                     });
                 },
                 error: function(xhr) {
-                    console.log(xhr);
                     Swal.fire({
                         icon: "error",
                         title: "Logout Failed",
@@ -440,7 +444,6 @@
                 document.getElementById('model').value = stockItem.model || '';
                 document.getElementById('price').value = stockItem.price;
                 document.getElementById('count').value = stockItem.count;
-                document.getElementById('stockNumber').value = stockItem.stockNumber;
                 document.getElementById('subCategory_id').value = stockItem.subCategory_id;
                 document.getElementById('desc').value = stockItem.desc || '';
 
@@ -468,28 +471,31 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function(response) {
+
                         if (response.success) {
                             const dropdown = document.getElementById('subCategory_id');
-                            dropdown.innerHTML = '<option value="">Select Category</option>';
-                            
+                            dropdown.innerHTML = '<option value="">Select Subcategory</option>';
+
                             response.subCategories.forEach(function(category) {
                                 const option = document.createElement('option');
                                 option.value = category.id;
                                 option.textContent = category.sub_title;
                                 dropdown.appendChild(option);
                             });
-                            
+
                             // Also populate filter dropdown
                             const filterDropdown = document.getElementById('categoryFilter');
-                            filterDropdown.innerHTML = '<option value="">All Categories</option>';
+                            filterDropdown.innerHTML = '<option value="">All Subcategories</option>';
                             response.subCategories.forEach(function(category) {
                                 const option = document.createElement('option');
                                 option.value = category.id;
                                 option.textContent = category.sub_title;
                                 filterDropdown.appendChild(option);
                             });
-                            
+
                             categories = response.subCategories;
+
+
                             resolve();
                         } else {
                             console.error('Failed to fetch categories');
@@ -512,7 +518,6 @@
                 model: document.getElementById('model').value,
                 price: parseFloat(document.getElementById('price').value),
                 count: parseInt(document.getElementById('count').value),
-                stockNumber: document.getElementById('stockNumber').value,
                 subCategory_id: document.getElementById('subCategory_id').value,
                 desc: document.getElementById('desc').value
             };
@@ -554,7 +559,7 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('Error:', error);
+                    console.error('Error:');
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
@@ -580,7 +585,9 @@
                     $.ajax({
                         url: "{{ route('stock.delete') }}",
                         type: 'DELETE',
-                        data: JSON.stringify({ id: stockId }),
+                        data: JSON.stringify({
+                            id: stockId
+                        }),
                         contentType: 'application/json',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -617,6 +624,7 @@
 
         // Fetch all stock data
         function fetchStockData() {
+            populateCategoryDropdown();
             document.getElementById('loadingState').classList.remove('hidden');
             document.getElementById('stockTable').classList.add('hidden');
             document.getElementById('lowStockSection').classList.add('hidden');
@@ -629,9 +637,9 @@
                 },
                 success: function(response) {
                     document.getElementById('loadingState').classList.add('hidden');
-                    
+
                     if (response.success) {
-                        stockData = response.stock;
+                        stockData = response.data;
                         filteredStockData = [...stockData];
                         renderStockTable();
                         updateStatistics();
@@ -660,6 +668,7 @@
 
         // Render stock table
         function renderStockTable() {
+            populateCategoryDropdown()
             const tableBody = document.getElementById('stockTableBody');
             tableBody.innerHTML = '';
 
@@ -676,12 +685,14 @@
             }
 
             filteredStockData.forEach(function(item) {
-                const category = categories.find(cat => cat.id === item.subCategory_id);
+                const category = categories.find(cat => parseInt(cat.id) === parseInt(item.subCategory_id));
+                console.log(categories);
+
                 const categoryName = category ? category.sub_title : 'Unknown';
-                
+
                 let statusClass = '';
                 let statusText = '';
-                
+
                 if (item.count === 0) {
                     statusClass = 'bg-red-100 text-red-800';
                     statusText = 'Out of Stock';
@@ -729,7 +740,7 @@
                         </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        ${item.stockNumber}
+                        ${item.stockNumber || 'N/A'}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <button class="text-indigo-600 hover:text-indigo-900 mr-3" onclick="openEditStockModal(${item.id})">
@@ -765,7 +776,7 @@
         function updateLowStockAlerts() {
             const lowStockItems = stockData.filter(item => item.count > 0 && item.count <= 5);
             const alertsContainer = document.getElementById('lowStockAlerts');
-            
+
             alertsContainer.innerHTML = '';
 
             if (lowStockItems.length === 0) {
@@ -781,7 +792,7 @@
                         <div>
                             <h4 class="text-sm font-medium text-red-800">${item.name}</h4>
                             <p class="text-xs text-red-600 mt-1">Only ${item.count} left in stock</p>
-                            <p class="text-xs text-red-500 mt-1">${item.stockNumber}</p>
+                            <p class="text-xs text-red-500 mt-1">${item.stockNumber || 'N/A'}</p>
                         </div>
                         <button class="text-red-700 hover:text-red-900" onclick="openEditStockModal(${item.id})">
                             <i class="fas fa-edit"></i>
@@ -802,12 +813,12 @@
 
             filteredStockData = stockData.filter(item => {
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm) ||
-                                    item.brand.toLowerCase().includes(searchTerm) ||
-                                    item.model.toLowerCase().includes(searchTerm) ||
-                                    item.stockNumber.toLowerCase().includes(searchTerm);
-                
+                    item.brand.toLowerCase().includes(searchTerm) ||
+                    (item.model && item.model.toLowerCase().includes(searchTerm)) ||
+                    (item.stockNumber && item.stockNumber.toLowerCase().includes(searchTerm));
+
                 const matchesCategory = !categoryFilter || item.subCategory_id == categoryFilter;
-                
+
                 let matchesStatus = true;
                 if (statusFilter === 'high') {
                     matchesStatus = item.count > 15;
@@ -842,7 +853,19 @@
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
             fetchStockData();
+
+
+            const user = JSON.parse(localStorage.getItem('userData'));
+
+            if (user && user.name) {
+                document.getElementById('userName').textContent = user.name;
+            }
+
         });
     </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
+
 </html>
