@@ -10,10 +10,10 @@ Route::post('/register', [AnuthController::class, 'register']);
 Route::post('/logout', [AnuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [AnuthController::class, 'showProfile'])->name('profile');
+   
     Route::post('/profile', [AnuthController::class, 'updateProfile']);
-    Route::get('/change-password', [AnuthController::class, 'showChangePassword'])->name('change.password');
-    Route::post('/change-password', [AnuthController::class, 'changePassword']);
+    Route::post('/change-password', [AnuthController::class, 'changePassword'])->name('change.password');
+    Route::get('/user-data', [AnuthController::class, 'getUserData'])->name('user.data');
 });
 
 Route::middleware(['auth'])->group(function () {
@@ -29,13 +29,11 @@ Route::middleware(['auth'])->group(function () {
         return view('page.stock');
     })->name('stock');
     
-    Route::get('/users', function () {
+    Route::get('/profile', function () {
         return view('page.user');
     })->name('users');
     
-    Route::get('/settings', function () {
-        return view('page.settings');
-    })->name('settings');
+
     
     Route::get('/reports', function () {
         return view('page.report'
