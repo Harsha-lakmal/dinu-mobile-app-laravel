@@ -11,7 +11,6 @@ Route::post('/logout', [AnuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
    
-    Route::post('/profile', [AnuthController::class, 'updateProfile']);
     Route::post('/change-password', [AnuthController::class, 'changePassword'])->name('change.password');
     Route::get('/user-data', [AnuthController::class, 'getUserData'])->name('user.data');
 });
