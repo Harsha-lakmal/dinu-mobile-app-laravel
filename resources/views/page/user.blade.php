@@ -293,14 +293,46 @@
                     return password;
                 }
             }).then((result) => {
+                console.log(result);
+                
                 if (result.isConfirmed) {
-                    // Here you would typically make an API call to delete the account
-                    // For now, we'll just show a success message
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Deleted!',
-                        text: 'Your account has been deleted.',
-                        confirmButtonColor: '#4f46e5'
+                    $.ajax({
+                        url: "{{ route('delete.account') }}",
+                        type: 'DELETE',
+                        data: JSON.stringify({ password: result.value }),
+                        contentType: 'application/json',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(data) {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Deleted!',
+                                    text: 'Your account has been deleted.',
+                                    confirmButtonColor: '#4f46e5'
+                                }).then(() => {
+                                    // Redirect to homepage or logout
+                                    window.location.href = "{{ route('login') }}";
+                                });
+                            } else {
+                                
+                                
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: data.message || 'Failed to delete account.'
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'An error occurred while deleting the account.'
+                            });
+                        }
                     });
                 }
             });
@@ -328,6 +360,8 @@
                             document.getElementById('passwordForm').reset();
                         });
                     } else {
+                    console.log(Response);
+                    
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',

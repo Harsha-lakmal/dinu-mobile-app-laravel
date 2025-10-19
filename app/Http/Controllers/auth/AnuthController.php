@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 
 class AnuthController extends Controller
 {
@@ -52,7 +52,7 @@ class AnuthController extends Controller
     public function getUserData(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email', 
+            'email' => 'required|email',
         ]);
 
         if ($validator->fails()) {
@@ -114,41 +114,55 @@ class AnuthController extends Controller
             'redirect_url' => url('/login')
         ]);
     }
-
-
-    
-
-
-
-
 public function changePassword(Request $request)
 {
-    
     $validator = Validator::make($request->all(), [
         'current_password' => 'required',
-        'new_password' => 'required|min:3|confirmed',
+        'new_password' => 'required',
     ]);
 
-
-
     if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput();
+        return response()->json(['errors' => $validator->errors()], 422);
     }
-   
-    $user = Auth::user();
-    
 
-    dd("here");
+    $user = Auth::user();
+
+    if (!$user) {
+        return response()->json(['error' => 'User not authenticated'], 401);
+    }
 
     if (!Hash::check($request->current_password, $user->password)) {
-        return redirect()->back()->withErrors(['current_password' => 'Current password is incorrect.']);
+        return response()->json(['error' => 'Current password is incorrect'], 400);
     }
 
-    $user->password = Hash::make($request->new_password);
-    $user->save();
+    DB::table('users')
+        ->where('id', $user->id)
+        ->update([
+            'password' => Hash::make($request->new_password),
+            'updated_at' => now(), 
+        ]);
 
-    return redirect()->back()->with('success', 'Password changed successfully!');
+    return response()->json(['success' => 'Password changed successfully!']);
 }
+
+function deleteAccount(Request $request)
+{
+
+    
+    $user = Auth::user();
+
+    if (!$user) {
+        return response()->json(['error' => 'User not authenticated'], 401);
+    }
+
+    DB::table('users')->where('id', $user->id)->delete();
+
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return response()->json(['success' => 'Account deleted successfully!']);
+
+}
+
 }
