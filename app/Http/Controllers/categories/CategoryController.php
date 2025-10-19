@@ -24,11 +24,6 @@ class CategoryController extends Controller
                 'category_id' => 'required|integer|exists:categories,id',
             ]);
 
-
-
-
-
-
             $lastSubCategory = SubCategory::orderBy('id', 'desc')->first();
 
             if ($lastSubCategory) {
