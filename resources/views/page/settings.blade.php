@@ -25,10 +25,8 @@
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
-        <!-- Mobile sidebar overlay -->
         <div id="mobileSidebarOverlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-20 lg:hidden hidden"></div>
 
-        <!-- Sidebar -->
         <div id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition duration-200 ease-in-out">
             <div class="flex items-center justify-between p-4 border-b">
                 <h1 class="text-xl font-bold text-gray-800">Dashboard</h1>
@@ -60,7 +58,6 @@
             </nav>
         </div>
 
-        <!-- Main content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Header -->
             <header class="bg-white shadow-sm z-10">
