@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,11 +22,11 @@
                 </button>
             </div>
 
-              @include('model.nav.nav')
+            @include('model.nav.nav')
 
         </div>
         <div class="flex-1 flex flex-col overflow-hidden">
- 
+
             <header class="bg-white shadow-sm z-10">
                 <div class="flex items-center justify-between px-4 py-3">
                     <div class="flex items-center">
@@ -37,7 +38,7 @@
 
                     <div class="flex items-center space-x-4">
                         @csrf
-                        <span id="userName" class="text-gray-700">Dinu</span>
+                        <span id="userName" class="text-gray-700">Dinu Mobile</span>
 
                         <button onclick="logOut()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium">
                             Logout
@@ -53,7 +54,7 @@
         </div>
     </div>
 
-    @yield('scripts') 
+    @yield('scripts')
 </body>
 @section('scripts')
 @include('model.nav.nav-js')
@@ -62,6 +63,15 @@
         localStorage.removeItem('userData');
         window.location.href = "{{ route('login') }}";
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const user = JSON.parse(localStorage.getItem('userData'));
+
+        if (user && user.name) {
+            document.getElementById('userName').textContent = user.name;
+        }
+    });
 </script>
 @endsection
 

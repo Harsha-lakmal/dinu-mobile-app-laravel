@@ -209,7 +209,6 @@
             changePassword(formData);
         });
 
-        // Two-factor authentication functionality
         document.getElementById('enable2faBtn').addEventListener('click', function() {
             Swal.fire({
                 title: 'Enable Two-Factor Authentication',
