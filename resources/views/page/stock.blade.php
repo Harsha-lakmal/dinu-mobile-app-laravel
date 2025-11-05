@@ -91,8 +91,8 @@
                 <div class="container mx-auto px-4 py-6">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                         <div>
-                            <!-- <h1 class="text-2xl font-bold text-gray-800">Stock Overview</h1>
-                            <p class="text-gray-600 mt-1">Manage and track your inventory</p> -->
+                            <h1 class="text-2xl font-bold text-gray-800">Stock Overview</h1>
+                            <p class="text-gray-600 mt-1">Manage and track your inventory</p>
                         </div>
                         <div class="flex space-x-3 mt-4 md:mt-0">
                             <button class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-md flex items-center" onclick="clearFilters()">
