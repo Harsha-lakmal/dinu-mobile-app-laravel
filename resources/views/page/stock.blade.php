@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock Management</title>
+    <title>Stock Page </title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
@@ -54,52 +54,27 @@
 
 <body class="bg-gray-100">
     <div class="flex h-screen">
-        <!-- Mobile sidebar overlay -->
         <div id="mobileSidebarOverlay" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-20 lg:hidden hidden"></div>
 
-        <!-- Sidebar -->
         <div id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform -translate-x-full lg:translate-x-0 lg:static lg:inset-0 transition duration-200 ease-in-out">
             <div class="flex items-center justify-between p-4 border-b">
-                <h1 class="text-xl font-bold text-gray-800">Dashboard</h1>
+                <h1 class="text-xl font-bold text-gray-800">Dinu Mobile </h1>
                 <button id="closeSidebar" class="lg:hidden text-gray-600 hover:text-gray-900">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
 
-            <nav class="mt-6">
-                <a href="{{ route('stock') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page1') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
-                    <i class="fas fa-chart-bar mr-3"></i>
-                    <span>Stock</span>
-                </a>
-                <a href="{{ route('reports') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page4') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
-                    <i class="fas fa-file-alt mr-3"></i>
-                    <span>Reports</span>
-                </a>
-
-                <a href="{{ route('categories') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page4') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
-                    <i class="fas fa-file-alt mr-3"></i>
-                    <span>Categories</span>
-                </a>
-
-                <a href="{{ route('users') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 {{ request()->is('page2') ? 'bg-indigo-50 text-indigo-600 border-r-2 border-indigo-600' : '' }}">
-                    <i class="fas fa-user-circle mr-3"></i>
-                    <span>Profile</span>
-                </a>
-
-
-            </nav>
+           @include('model.nav.nav')
         </div>
 
-        <!-- Main content -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
             <header class="bg-white shadow-sm z-10">
                 <div class="flex items-center justify-between px-4 py-3">
                     <div class="flex items-center">
                         <button id="openSidebar" class="lg:hidden text-gray-600 hover:text-gray-900 mr-4">
                             <i class="fas fa-bars"></i>
                         </button>
-                        <h2 class="text-lg font-semibold text-gray-800">Stock Management</h2>
+                        <h2 class="text-lg font-semibold text-gray-800">Stock Page </h2>
                     </div>
 
                     <div class="flex items-center space-x-4">
@@ -112,14 +87,12 @@
                 </div>
             </header>
 
-            <!-- Page content -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
                 <div class="container mx-auto px-4 py-6">
-                    <!-- Stock Header -->
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                         <div>
-                            <h1 class="text-2xl font-bold text-gray-800">Stock Overview</h1>
-                            <p class="text-gray-600 mt-1">Manage and track your inventory</p>
+                            <!-- <h1 class="text-2xl font-bold text-gray-800">Stock Overview</h1>
+                            <p class="text-gray-600 mt-1">Manage and track your inventory</p> -->
                         </div>
                         <div class="flex space-x-3 mt-4 md:mt-0">
                             <button class="bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-md flex items-center" onclick="clearFilters()">
@@ -133,7 +106,6 @@
                         </div>
                     </div>
 
-                    <!-- Stock Statistics -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                         <div class="bg-white rounded-lg shadow p-6">
                             <div class="flex items-center">
@@ -184,7 +156,6 @@
                         </div>
                     </div>
 
-                    <!-- Search and Filter Section -->
                     <div class="bg-white rounded-lg shadow p-6 mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div class="relative">
@@ -207,13 +178,11 @@
                         </div>
                     </div>
 
-                    <!-- Loading State -->
                     <div id="loadingState" class="text-center py-8">
                         <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
                         <p class="mt-2 text-gray-600">Loading stock data...</p>
                     </div>
 
-                    <!-- Stock Table -->
                     <div id="stockTable" class="bg-white rounded-lg shadow overflow-hidden mb-6 hidden">
                         <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                             <h3 class="text-lg font-medium text-gray-900">Current Stock</h3>
@@ -236,13 +205,11 @@
                                     </tr>
                                 </thead>
                                 <tbody id="stockTableBody" class="bg-white divide-y divide-gray-200">
-                                    <!-- Dynamic content will be loaded here -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
 
-                    <!-- Low Stock Alert Section -->
                     <div id="lowStockSection" class="bg-white rounded-lg shadow overflow-hidden hidden">
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-medium text-gray-900 flex items-center">
@@ -252,7 +219,6 @@
                         </div>
                         <div class="p-6">
                             <div id="lowStockAlerts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <!-- Low stock alerts will be populated here -->
                             </div>
                         </div>
                     </div>
@@ -261,21 +227,17 @@
         </div>
     </div>
 
-    <!-- Add/Edit Stock Modal -->
     <div id="stockModal" class="fixed inset-0 bg-gray-800 bg-opacity-70 overflow-y-auto h-full w-full hidden z-50 transition-opacity duration-300">
         <div class="relative top-10 mx-auto p-5 w-full max-w-2xl">
             <div class="bg-white rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 scale-95 hover:scale-100">
-                <!-- Header -->
-                <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-4">
+
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 p-4">
                     <h3 id="stockModalTitle" class="text-xl font-bold text-white text-center">Add New Stock Item</h3>
                 </div>
-
-                <!-- Form -->
                 <form id="stockForm" class="p-6 space-y-5">
                     <input type="hidden" id="stock_id" name="id">
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Name -->
                         <div class="space-y-2">
                             <label class="block text-sm font-semibold text-gray-700" for="name">
                                 Product Name *
@@ -285,7 +247,6 @@
                                 placeholder="Enter product name">
                         </div>
 
-                        <!-- Brand -->
                         <div class="space-y-2">
                             <label class="block text-sm font-semibold text-gray-700" for="brand">
                                 Brand *
@@ -297,7 +258,6 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Model -->
                         <div class="space-y-2">
                             <label class="block text-sm font-semibold text-gray-700" for="model">
                                 Model
@@ -307,7 +267,6 @@
                                 placeholder="Enter model">
                         </div>
 
-                        <!-- Price -->
                         <div class="space-y-2">
                             <label class="block text-sm font-semibold text-gray-700" for="price">
                                 Price *
@@ -317,9 +276,7 @@
                                 placeholder="0.00">
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Stock Count -->
                         <div class="space-y-2">
                             <label class="block text-sm font-semibold text-gray-700" for="count">
                                 Stock Count *
@@ -329,12 +286,8 @@
                                 placeholder="0">
                         </div>
 
-
-
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Subcategory -->
                         <div class="space-y-2">
                             <label class="block text-sm font-semibold text-gray-700" for="subCategory_id">
                                 Sub Category *
@@ -346,7 +299,6 @@
                         </div>
                     </div>
 
-                    <!-- Description -->
                     <div class="space-y-2">
                         <label class="block text-sm font-semibold text-gray-700" for="desc">
                             Description
@@ -356,7 +308,6 @@
                             placeholder="Enter product description"></textarea>
                     </div>
 
-                    <!-- Buttons -->
                     <div class="flex justify-end space-x-3 pt-4">
                         <button type="button" onclick="closeStockModal()"
                             class="px-5 py-2.5 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
@@ -373,6 +324,5 @@
     </div>
    @yield('scripts')
 </body> 
-@include('page');
-
+@include('page.js.stock-js')
 </html>
